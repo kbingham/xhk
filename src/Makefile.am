@@ -1,0 +1,5 @@
+bin_PROGRAMS = xhk 
+xhk_SOURCES = xhk.c
+
+xhk_LDADD = @X11_LIBS@ @XI_LIBS@ @XTST_LIBS@
+xhk_CPPFLAGS = @X11_CFLAGS@ @XI_CFLAGS@ @XTST_CFLAGS@
