@@ -286,9 +286,10 @@ char * SpaceStateNames[] = {
     "Modified",
 };
 
+static int space = SPACE_STATE_START;
+
 int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
 {
-    static int space = SPACE_STATE_START;
     int mirrored_key;
     bool mirrored;
 
@@ -594,13 +595,100 @@ void install_signal_handlers(void)
     signal(SIGINT, handle_signal);
 }
 
+int KeycodeTest(XWindowsScreen_t * screen, int keycode, int up_flag, int expected, int expected_state)
+{
+    int returned_code = ProcessKeycode(screen, keycode, up_flag);
+
+    if (returned_code != expected)
+        ERROR("ProcessKeyCode for %d (%s) returned %d {%s} but expected %d {%s}\n", keycode, up_flag ? "Up" : "Down",
+              returned_code, keycode_to_char(screen, returned_code), expected, keycode_to_char(screen, expected));
+
+    if (space != expected_state)
+        ERROR("ProcessKeyCode for %d (%s %s) returned in state %d {%s} but expected state %d {%s}\n",
+              keycode, keycode_to_char(screen, keycode), up_flag ? "Up" : "Down",
+              space, SpaceStateNames[space], expected_state, SpaceStateNames[expected_state]);
+
+    return (returned_code != expected);
+}
+
+#define UPFLAG_KEYDOWN 0
+#define UPFLAG_KEYUP 1
+
+int xlib_test(void)
+{
+    int errors = 0;
+
+    XWindowsScreen_t * screen = construct();
+
+    if (screen->display == NULL) {
+        ERROR("Couldn't connect to XServer\n");
+        return -1;
+    }
+
+    /* Which version of XI2? We support 2.0 */
+    int major = 2, minor = 0;
+    if (XIQueryVersion(screen->display, &major, &minor) == BadRequest) {
+        printf("XI2 not available. Server supports %d.%d\n", major, minor);
+        return -1;
+    }
+
+    INFO("XI Version %d.%d\n", major, minor);
+
+    fflush(stdout);
+
+    INFO("Entering Test Loop...\n");
+
+    DEBUG("Check a key returns as expected\n");
+    errors += KeycodeTest(screen, KEY_0, UPFLAG_KEYDOWN, KEY_0, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_0, UPFLAG_KEYUP, KEY_0, SPACE_STATE_START);
+
+
+    DEBUG("\nCheck space works alone\n");
+    errors += KeycodeTest(screen, KEY_SPACE, UPFLAG_KEYDOWN, -1, SPACE_STATE_PRESSED);
+    errors += KeycodeTest(screen, KEY_SPACE, UPFLAG_KEYUP, KEY_SPACE, SPACE_STATE_START);
+    /* If we expect a space - it gets sent by the state machine, so we have to cancel it out */
+    SendKey(screen, KEY_SPACE, KEYSTATE_UP, CurrentTime);
+
+    DEBUG("\nVerify a key gets mirrored\n");
+    errors += KeycodeTest(screen, KEY_SPACE, UPFLAG_KEYDOWN, -1, SPACE_STATE_PRESSED);
+    errors += KeycodeTest(screen, KEY_F, UPFLAG_KEYDOWN, KEY_J, SPACE_STATE_MODIFIED);
+    errors += KeycodeTest(screen, KEY_F, UPFLAG_KEYUP, KEY_J, SPACE_STATE_MODIFIED);
+    errors += KeycodeTest(screen, KEY_SPACE, UPFLAG_KEYUP, -1, SPACE_STATE_START);
+    /* If we expect a space - it gets sent by the state machine, so we have to cancel it out */
+    SendKey(screen, KEY_SPACE, KEYSTATE_UP, CurrentTime);
+
+    DEBUG("\nVerify a non-mirrored key doesn't break the space bar\n");
+    errors += KeycodeTest(screen, KEY_SPACE, UPFLAG_KEYDOWN, -1, SPACE_STATE_PRESSED);
+    errors += KeycodeTest(screen, KEY_LSHIFT, UPFLAG_KEYDOWN, KEY_LSHIFT, SPACE_STATE_PRESSED);
+    errors += KeycodeTest(screen, KEY_LSHIFT, UPFLAG_KEYUP, KEY_LSHIFT, SPACE_STATE_PRESSED);
+    errors += KeycodeTest(screen, KEY_SPACE, UPFLAG_KEYUP, KEY_SPACE, SPACE_STATE_START);
+
+    DEBUG("\nVerify pressing paired mirror keys sequentially still works\n");
+    errors += KeycodeTest(screen, KEY_F, UPFLAG_KEYDOWN, KEY_F, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_J, UPFLAG_KEYDOWN, KEY_J, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_F, UPFLAG_KEYUP, KEY_F, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_J, UPFLAG_KEYUP, KEY_J, SPACE_STATE_START);
+    /* Try the other way too */
+    errors += KeycodeTest(screen, KEY_R, UPFLAG_KEYDOWN, KEY_R, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_U, UPFLAG_KEYDOWN, KEY_U, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_U, UPFLAG_KEYUP, KEY_U, SPACE_STATE_START);
+    errors += KeycodeTest(screen, KEY_R, UPFLAG_KEYUP, KEY_R, SPACE_STATE_START);
+
+    INFO("\nExiting Test Loop with %d errors...\n", errors);
+
+    XCloseDisplay(screen->display);
+
+    return 0;
+}
+
+
 int main(int argc, char **argv)
 {
     char opt;
 
     REPORT("\n-- HalfKey Xorg Driver Utility %s --\n", VERSION);
 
-    while((opt = getopt(argc, argv, "vhm")) != -1)
+    while((opt = getopt(argc, argv, "vhmt")) != -1)
         switch(opt) {
         case 'v':
             verbose++;
@@ -610,6 +698,10 @@ int main(int argc, char **argv)
             exit(0);
         case 'm':
             MirrorMode = true;
+            break;
+        case 't':
+            xlib_test();
+            exit(0);
             break;
         default:
             usage();
