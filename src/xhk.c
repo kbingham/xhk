@@ -283,6 +283,8 @@ int mirror_key(int keycode)
 int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
 {
     static int space = SPACE_STATE_START;
+    int mirrored_key;
+    bool mirrored;
 
     /* MirrorMode mirrors all keys before the state machine operates */
     if (MirrorMode)
@@ -293,14 +295,17 @@ int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
      *
      * 			START		PRESSED		MODIFIED
      *
-     * SpaceDown	NoAction	Discarded	Discarded
+     * SpaceDown	Discarded	Discarded	Discarded
      * 			-> Pressed	-> Pressed	-> Modified
      *
-     * SpaceUp		Invalid?	InjectSpace	Discarded
+     * SpaceUp		Invalid?	InjectSpace	UpAllModifiedDowns?
      * 			-> Start	-> Start	-> Start
      *
-     * OtherKey		InjectKey	MirrorKey	MirrorKey
+     * MirroredKey	InjectKey	MirrorKey	MirrorKey
      * 			-> Start	-> Modified	-> Modified
+     *
+     * OtherKey		InjectKey	InjectKey	InjectKey
+     * 			-> Start	-> Pressed	-> Modified
      */
 
     if(keycode == KEY_SPACE) {
@@ -325,9 +330,15 @@ int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
         }
     }
 
-    if(space != SPACE_STATE_START)  {
+    /* Mirror the key once to prevent excess checking */
+    mirrored_key = mirror_key(keycode);
+    /* Determine if the key was modified by our mirror - Not all keys flip */
+    mirrored = (mirrored_key != keycode);
+
+    /* Only change state if this action would mirror a key */
+    if( mirrored && (space != SPACE_STATE_START) ) {
         space = SPACE_STATE_MODIFIED; /* Space bar can no longer insert a space char */
-        keycode = mirror_key(keycode);
+        keycode = mirrored_key;
     }
 
     /* Verify that we are only releasing keys that we pressed */
