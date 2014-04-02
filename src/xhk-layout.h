@@ -48,6 +48,7 @@ enum EN_GB_LAYOUT {
     KEY_P,
 
     KEY_ENTER = 36,
+    KEY_CTRL  = 37,
 
     KEY_A = 38,
     KEY_S,
@@ -59,6 +60,11 @@ enum EN_GB_LAYOUT {
     KEY_K,
     KEY_L,
     KEY_SEMICOLON,
+    KEY_AT,
+    KEY_HASH,
+
+    KEY_LSHIFT = 50,
+    KEY_BSLASH = 51,
 
     KEY_Z = 52,
     KEY_X,
@@ -70,6 +76,7 @@ enum EN_GB_LAYOUT {
     KEY_COMMA,
     KEY_STOP,
     KEY_FSLASH,
+    KEY_RSHIFT,
 
     KEY_SPACE = 65,
     KEY_CAPS = 66,
