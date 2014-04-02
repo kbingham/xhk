@@ -391,7 +391,7 @@ static int handle_key_press(XWindowsScreen_t * screen, XIDeviceEvent *event)
     if ( (event->flags & XIKeyRepeat) && (keycode == KEY_SPACE) ) // Ignore SPACE key repeats
         return -1;
 
-    keycode = ProcessKeycode(screen, keycode, 1);
+    keycode = ProcessKeycode(screen, keycode, 0);
 
     INFO("Keypress %d (%s), keycode = %d (%s) time=%ld\n",  event->detail, keycode_to_char(screen, event->detail),
          keycode, keycode_to_char(screen, keycode),
