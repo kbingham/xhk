@@ -280,11 +280,19 @@ int mirror_key(int keycode)
 #define SPACE_STATE_PRESSED  1
 #define SPACE_STATE_MODIFIED 2
 
+char * SpaceStateNames[] = {
+    "Start",
+    "Pressed",
+    "Modified",
+};
+
 int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
 {
     static int space = SPACE_STATE_START;
     int mirrored_key;
     bool mirrored;
+
+    DEBUG("Entering ProcessKeycode in state %s\n", SpaceStateNames[space]);
 
     /* MirrorMode mirrors all keys before the state machine operates */
     if (MirrorMode)
