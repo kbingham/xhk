@@ -1,0 +1,10 @@
+The Debian Package xhk
+----------------------------
+
+ Running xhk detaches the keyboard, and intercepts all input; processing it for
+ space bar pushes as it goes. The space bar acts as a modifier if it is held at
+ the same time as a standard letter. Modifying acts to mirror the input such
+ that key presses are mirrored down the middle of the home row.
+ Pressing space, and then releasing will still provide a single space character
+
+ -- Kieran Bingham <kieran@kbingham.co.uk>  Thu, 03 Apr 2014 14:26:47 +0100

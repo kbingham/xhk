@@ -1,0 +1,19 @@
+Source: xhk
+Section: x11
+Priority: extra
+Maintainer: Kieran Bingham <kieran@kbingham.co.uk>
+Build-Depends: debhelper (>= 8.0.0), autotools-dev, libx11-dev, libxi-dev, libxtst-dev
+Standards-Version: 3.9.4
+Homepage: http://kieranbingham.co.uk/xhk/
+Vcs-Git: https://github.com/kbingham/xhk.git
+Vcs-Browser: https://github.com/kbingham/xhk
+
+Package: xhk
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libx11, libxi, libxtst
+Description: XLib halfkey implementation
+ Running xhk detaches the keyboard, and intercepts all input; processing it for
+ space bar pushes as it goes. The space bar acts as a modifier if it is held at
+ the same time as a standard letter. Modifying acts to mirror the input such
+ that key presses are mirrored down the middle of the home row.
+ Pressing space, and then releasing will still provide a single space character
