@@ -561,6 +561,16 @@ int xlib_halfkey(void)
 #define BOLD "\033[1m"
 #define NORMAL "\033[0m"
 
+void version(void)
+{
+    printf( "xhk, version %s\n", VERSION);
+    printf( "Copyright (C) 2014 Kieran Bingham.\n" );
+    printf( "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n"
+            "\n"
+            "This is free software; you are free to change and redistribute it.\n"
+            "There is NO WARRANTY, to the extent permitted by law.\n" );
+}
+
 void usage(void)
 {
     printf("%s", BOLD);
@@ -688,11 +698,14 @@ int main(int argc, char **argv)
 
     REPORT("\n-- HalfKey Xorg Driver Utility %s --\n", VERSION);
 
-    while((opt = getopt(argc, argv, "dhmt")) != -1)
+    while((opt = getopt(argc, argv, "dvhmt")) != -1)
         switch(opt) {
         case 'd':
             verbose++;
             break;
+        case 'v':
+            version();
+            exit(0);
         case 'h':			//print help page
             usage();
             exit(0);
