@@ -566,7 +566,7 @@ void usage(void)
     printf("%s", BOLD);
     printf("\tusage:\n");
     printf("\t\t-m mirror mode - all keys reversed\n");
-    printf("\t\t-v increase verbosity levels\n");
+    printf("\t\t-d increase debug verbosity levels\n");
     printf("\t\t-h this help\n");
     printf("%s", NORMAL);
 }
@@ -688,9 +688,9 @@ int main(int argc, char **argv)
 
     REPORT("\n-- HalfKey Xorg Driver Utility %s --\n", VERSION);
 
-    while((opt = getopt(argc, argv, "vhmt")) != -1)
+    while((opt = getopt(argc, argv, "dhmt")) != -1)
         switch(opt) {
-        case 'v':
+        case 'd':
             verbose++;
             break;
         case 'h':			//print help page
