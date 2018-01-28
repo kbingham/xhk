@@ -350,6 +350,12 @@ int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
         keycode = mirrored_key;
     }
 
+    /* Allow the user to 'cancel' a modifier without performing any further action */
+    if(keycode == KEY_ESC && space != SPACE_STATE_START) {
+        space = SPACE_STATE_MODIFIED;
+        return -1;
+    }
+
     /* Verify that we are only releasing keys that we pressed */
     if (up_flag && keystates[keycode] == KEYSTATE_UP) { /* Perhaps this was the wrong key */
         int mirror = mirror_key(keycode);
