@@ -34,6 +34,7 @@ enum EN_GB_LAYOUT {
     KEY_9,
     KEY_0,
 
+    KEY_MINUS = 20,
     KEY_BACKSPACE = 22,
     KEY_TAB = 23,
 
@@ -64,6 +65,7 @@ enum EN_GB_LAYOUT {
     KEY_AT,
     KEY_HASH,
 
+    KEY_GRAVE = 49,
     KEY_LSHIFT = 50,
     KEY_BSLASH = 51,
 

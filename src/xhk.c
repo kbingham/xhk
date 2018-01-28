@@ -271,6 +271,13 @@ int mirror_key(int keycode)
     case KEY_CAPS:
         keycode = KEY_ENTER;
         break;
+
+    case KEY_MINUS:
+        keycode = KEY_GRAVE;
+        break;
+    case KEY_GRAVE:
+        keycode = KEY_MINUS;
+        break;
     }
 
     return keycode;
