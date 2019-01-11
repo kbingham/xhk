@@ -1,4 +1,4 @@
-AC_INIT([xhk], [1.0], [kieranbingham@gmail.com])
+AC_INIT([xhk], [1.1], [kieranbingham@gmail.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PROG_CC_C99
 AM_PROG_CC_C_O
