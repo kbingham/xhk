@@ -220,7 +220,7 @@ static int SendKey(XWindowsScreen_t * screen, int keycode, int key_down, unsigne
 {
     DEBUG("Sending keycode %s %d, (%s) to XTest at %lu\n", key_down ? "Down" : "Up", keycode, keycode_to_char(screen, keycode), time);
 
-    int ret = XTestFakeKeyEvent(screen->display, keycode, key_down ? True : False, CurrentTime);
+    int ret = XTestFakeKeyEvent(screen->display, keycode, key_down ? true : false, CurrentTime);
 
     if (ret == 0)
         ERROR("XTestFakeKeyEvent failed to submit keycode %s %d at %lu\n", key_down ? "Down" : "Up", keycode, time);
@@ -333,7 +333,7 @@ int ProcessKeycode(XWindowsScreen_t * screen, int keycode, int up_flag)
             if(up_flag) {
                 /* Space released before any other key */
                 /* We discarded the original Space Down event, so provide one now */
-                SendKey(screen, keycode, True, CurrentTime);
+                SendKey(screen, keycode, true, CurrentTime);
                 space = SPACE_STATE_START;
                 return keycode; /* Space bar released, allow it to be pressed */
             } else
@@ -391,7 +391,7 @@ static int handle_key_release(XWindowsScreen_t * screen, XIDeviceEvent *event)
     if (keycode < 0)
         return -1;
 
-    SendKey(screen, keycode, False, event->time);
+    SendKey(screen, keycode, false, event->time);
 
     INFO("\n");
 
@@ -414,7 +414,7 @@ static int handle_key_press(XWindowsScreen_t * screen, XIDeviceEvent *event)
     if (keycode < 0)
         return -1;
 
-    SendKey(screen, keycode, True, event->time);
+    SendKey(screen, keycode, true, event->time);
 
     INFO("\n");
 
@@ -606,7 +606,7 @@ static void handle_signal(int signum)
         if (LocalScreen.display)
             reattach_device(LocalScreen.display, LocalScreen.keyboard.deviceid, LocalScreen.keyboard.attachment);
 
-        ApplicationRunning = False;
+        ApplicationRunning = false;
         break;
     }
 }
