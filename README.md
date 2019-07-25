@@ -1,6 +1,20 @@
 [xHK] - An Xlib halfkeyboard implementation
 ===========================================
 
+Getting started
+---------------
+
+To tryout xhk, run the following commands:
+
+    git clone https://github.com/kbingham/xhk.git
+    cd xhk
+    sudo apt-get install build-essential autoconf automake pkg-config
+    sudo apt-get install libx11-dev libxi-dev libxtst-dev
+    ./autogen.sh
+    ./configure
+    make
+    src/xhk -ddd  # -ddd executes with the highest debug level to see it working :)
+
 In early 2014, I had an operation on my right elbow to remove some
 bone fragments. These were remaining from an accident in my teenage
 years - but had started to cause me some pain and grief. The operation
@@ -33,7 +47,7 @@ My Solution
 I write C code. I use linux, it seemed only reasonable that as a version
 didn’t exist in this space I would create it and open-source it for all
 to use (and improve) You can get the sources from [GitHub] and build it
-yourself by following the instructions at my [xhk page][xHK] Once the
+yourself by following the instructions at my [xhk page][xHK]. Once the
 application is running - it is processing all your keypresses and
 decides if it should mirror them. ‘Backspace’ is mirrored with the ‘Tab’
 key, whilst ‘Enter’ is mirrored with ‘Caps-Lock’ If you use this - do
