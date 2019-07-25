@@ -44,19 +44,17 @@ Alternative Software Solutions
 My Solution
 -----------
 
-I write C code. I use linux, it seemed only reasonable that as a version
-didn’t exist in this space I would create it and open-source it for all
-to use (and improve) You can get the sources from [GitHub] and build it
-yourself by following the instructions at my [xhk page][xHK] Once the
-application is running - it is processing all your keypresses and
-decides if it should mirror them. ‘Backspace’ is mirrored with the ‘Tab’
-key, whilst ‘Enter’ is mirrored with ‘Caps-Lock’ If you use this - do
-drop me a mail to let me know how you get on, and if you find any
-problems I’ll look into them to fix them. Perhaps in the future I’ll
-pull together a GTK frontend for it, but it depends on how much use it
-gets.
+I write C code. I use linux, it seemed only reasonable that as a version didn’t
+exist in this space I would create it and open-source it for all to use (and
+improve) You can get the sources from [GitHub] and build it yourself by
+following the instructions in the Getting Started section above. Once the
+application is running - it is processing all your keypresses and decides if it
+should mirror them. ‘Backspace’ is mirrored with the ‘Tab’ key, whilst ‘Enter’
+is mirrored with ‘Caps-Lock’ If you use this - do drop me a mail to let me know
+how you get on, and if you find any problems I’ll look into them to fix them.
+Perhaps in the future I’ll pull together a GTK frontend for it, but it depends
+on how much use it gets.
 
-  [xHK]: http://kieranbingham.co.uk/xhk/ "xhk"
   [http://www.onehandkeyboard.org/]: http://www.onehandkeyboard.org/download/
     "MacOS/Windows software"
   [http://warped.org/]: http://warped.org/blog/2008/10/06/the-free-one-handed-keyboard/
