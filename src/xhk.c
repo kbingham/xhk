@@ -86,6 +86,8 @@ typedef struct XWindowsScreen_s {
 
 static XWindowsScreen_t LocalScreen;
 
+static int XInputDevice = -1;
+
 
 Display* OpenDisplay(const char* displayName)
 {
@@ -508,22 +510,30 @@ static int identify_local_keyboard(XWindowsScreen_t * screen)
 
     for (int i = 0; i < ndevices; i++) {
         device = &devices[i];
+        
+        if (XInputDevice >= 0) {
+            if (device->deviceid != XInputDevice)
+                continue;
+        }
+        else {
+            /* We're only interested in Keyboards */
+            if (device->use != XISlaveKeyboard)
+                continue;
 
-        /* We're only interested in Keyboards */
-        if (device->use != XISlaveKeyboard)
-            continue;
+            /* We're only interested in keyboards which are presented as keyboards too! */
+            if (strcasestr(device->name, "keyboard") == 0 )
+                continue;
 
-        /* We're only interested in keyboards which are presented as keyboards too! */
-        if (strcasestr(device->name, "keyboard") == 0 )
-            continue;
-
-        /* And I'm afraid we aren't going to deal with anything which isn't real... */
-        if (strcasestr(device->name, "virtual") != 0 )
-            continue;
+            /* And I'm afraid we aren't going to deal with anything which isn't real... */
+            if (strcasestr(device->name, "virtual") != 0 )
+                continue;
+        }
 
         /* However, If we have come this far, we likely have a keyboard! */
         keyboard_id = device->deviceid;
+        printf("Using X Input Device = %d\n", keyboard_id);
         screen->keyboard = *device; /* Copy the device structure for destruction */
+        break;
     }
 
     XIFreeDeviceInfo(devices);
@@ -711,7 +721,7 @@ int main(int argc, char **argv)
 
     REPORT("\n-- HalfKey Xorg Driver Utility %s --\n", VERSION);
 
-    while((opt = getopt(argc, argv, "dvhmt")) != -1)
+    while((opt = getopt(argc, argv, "dvhmti:")) != -1)
         switch(opt) {
         case 'd':
             verbose++;
@@ -728,6 +738,10 @@ int main(int argc, char **argv)
         case 't':
             xlib_test();
             exit(0);
+            break;
+        case 'i':
+            XInputDevice = atoi(optarg);
+            printf("XInputDevice = %d\n",XInputDevice);
             break;
         default:
             usage();
