@@ -590,6 +590,8 @@ void usage(void)
     printf("\tusage:\n");
     printf("\t\t-m mirror mode - all keys reversed\n");
     printf("\t\t-d increase debug verbosity levels\n");
+    printf("\t\t-t run internal tests\n");
+    printf("\t\t-v report the version information\n");
     printf("\t\t-h this help\n");
     printf("%s", NORMAL);
 }
