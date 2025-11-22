@@ -599,6 +599,7 @@ void usage(void)
     printf("%s", BOLD);
     printf("\tusage:\n");
     printf("\t\t-m mirror mode - all keys reversed\n");
+    printf("\t\t-i select device, e.g. -i9 for id=9 \n");
     printf("\t\t-d increase debug verbosity levels\n");
     printf("\t\t-t run internal tests\n");
     printf("\t\t-v report the version information\n");
